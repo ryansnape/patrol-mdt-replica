@@ -97,6 +97,7 @@ let audioContext = null;
 let sirenOscillator = null;
 let sirenGain = null;
 let sirenTimer = null;
+let audioUnlocked = false;
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -267,9 +268,31 @@ function toggleUtility(name) {
   }
 }
 
-function ensureAudio() {
-  if (!audioContext) audioContext = new AudioContext();
-  if (audioContext.state === "suspended") audioContext.resume();
+async function ensureAudio() {
+  const AudioCtor = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtor) {
+    writeLog("AUDIO", "WEB AUDIO NOT SUPPORTED");
+    return false;
+  }
+
+  if (!audioContext) {
+    audioContext = new AudioCtor();
+  }
+
+  if (audioContext.state === "suspended") {
+    await audioContext.resume();
+  }
+
+  if (!audioUnlocked) {
+    const buffer = audioContext.createBuffer(1, 1, 22050);
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioContext.destination);
+    source.start(0);
+    audioUnlocked = true;
+  }
+
+  return audioContext.state === "running";
 }
 
 function stopSiren() {
@@ -288,7 +311,7 @@ function stopSiren() {
   sirenGain = null;
 }
 
-function setSirenMode(mode) {
+async function setSirenMode(mode) {
   const normalized = ["off", "wail", "yelp", "piercer", "priority", "manual"].includes(mode)
     ? mode
     : "off";
@@ -305,7 +328,11 @@ function setSirenMode(mode) {
     return;
   }
 
-  ensureAudio();
+  const ready = await ensureAudio();
+  if (!ready) {
+    writeLog("AUDIO", "TAP AGAIN TO ENABLE AUDIO");
+    return;
+  }
   startLoopingSiren(normalized);
   writeLog("SIREN", `${normalized.toUpperCase()} TONE ACTIVE`);
 }
@@ -342,8 +369,12 @@ function startLoopingSiren(mode) {
   }, 35);
 }
 
-function playHorn() {
-  ensureAudio();
+async function playHorn() {
+  const ready = await ensureAudio();
+  if (!ready) {
+    writeLog("AUDIO", "TAP AGAIN TO ENABLE AUDIO");
+    return;
+  }
   const oscillator = audioContext.createOscillator();
   const gain = audioContext.createGain();
   oscillator.type = "square";
@@ -355,8 +386,9 @@ function playHorn() {
   oscillator.stop(audioContext.currentTime + 0.55);
 }
 
-function playRadioChirp() {
-  ensureAudio();
+async function playRadioChirp() {
+  const ready = await ensureAudio();
+  if (!ready) return;
   const oscillator = audioContext.createOscillator();
   const gain = audioContext.createGain();
   oscillator.type = "triangle";
@@ -455,7 +487,10 @@ document.addEventListener("click", (event) => {
   if (lightButton) return setLightMode(lightButton.dataset.lightMode);
 
   const sirenButton = event.target.closest("[data-siren]");
-  if (sirenButton) return setSirenMode(sirenButton.dataset.siren);
+  if (sirenButton) {
+    setSirenMode(sirenButton.dataset.siren);
+    return;
+  }
 
   const advisorButton = event.target.closest("[data-advisor]");
   if (advisorButton) return setAdvisorMode(advisorButton.dataset.advisor);
@@ -497,7 +532,8 @@ renderDetail(null);
 runLookup();
 setView("cad");
 setLightMode("off");
-setSirenMode("off");
+sirenState.textContent = "Muted";
+sirenKnob.textContent = "OFF";
 setAdvisorMode("off");
 writeLog("LOGIN", "METRO MDT TRAINING CONSOLE READY");
 tickClock();
