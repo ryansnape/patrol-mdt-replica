@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Metro MDT Console</title>
+    <title>LA Metro Patrol MDT</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -17,10 +17,10 @@
         <section class="mdt-frame" aria-label="mobile data terminal">
           <header class="terminal-top">
             <div class="brand">
-              <span class="badge-mark">M</span>
+              <span class="badge-mark">LA</span>
               <div>
-                <h1>Metro MDT</h1>
-                <p>Training Console</p>
+                <h1>LA Metro Patrol</h1>
+                <p>MDT Training Console</p>
               </div>
             </div>
             <div class="status-cells">
@@ -73,6 +73,22 @@
                 <span id="caseNumber">Select</span>
               </div>
               <div id="incidentDetail" class="detail-grid"></div>
+              <div class="unit-status-panel">
+                <div class="section-title">
+                  <h2>Unit Status</h2>
+                  <span>2A-17</span>
+                </div>
+                <div class="unit-status-buttons" id="statusButtons">
+                  <button data-status="Available" class="active">Avail</button>
+                  <button data-status="En Route">Enrt</button>
+                  <button data-status="On Scene">Scene</button>
+                  <button data-status="Transport">Trans</button>
+                  <button data-status="Meal">Meal</button>
+                  <button data-status="Busy">Busy</button>
+                  <button data-status="Clear">Clear</button>
+                  <button data-status="Station">Station</button>
+                </div>
+              </div>
               <div class="lookup-box">
                 <div class="filter-row">
                   <button data-lookup="plate" class="active">Plate</button>
@@ -176,7 +192,7 @@
             <div class="road-grid"></div>
             <div class="car">
               <div class="glass"></div>
-              <strong>METRO</strong>
+              <strong>TRAINING</strong>
               <span class="front red"></span>
               <span class="front blue"></span>
             </div>

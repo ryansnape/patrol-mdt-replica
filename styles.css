@@ -242,12 +242,38 @@ h2 {
 .cad-list,
 .map-panel,
 .detail-panel,
+.unit-status-panel,
 .control-card,
 .lightbar-zone {
   min-height: 0;
   border: 1px solid var(--line);
   background: var(--panel);
   padding: 10px;
+}
+
+.unit-status-panel {
+  margin-bottom: 8px;
+}
+
+.unit-status-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+
+.unit-status-buttons button {
+  min-height: 30px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 0.66rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.unit-status-buttons button.active {
+  border-color: var(--green);
+  background: #153b24;
 }
 
 #cadScreen {
@@ -656,7 +682,7 @@ input {
 .car strong {
   display: grid;
   place-items: center;
-  font-size: clamp(1.6rem, 4.7vw, 3.8rem);
+  font-size: clamp(1rem, 2.7vw, 2.1rem);
   font-weight: 950;
 }
 

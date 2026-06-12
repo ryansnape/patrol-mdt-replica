@@ -1,6 +1,6 @@
-# Metro MDT Console
+# LA Metro Patrol MDT
 
-A fictional patrol-car MDT and Code 3 control simulator built as a static HTML/CSS/JS site.
+A fictional patrol-car MDT with a separate emergency lights/siren controller, built as a static HTML/CSS/JS site.
 
 ## Preview
 

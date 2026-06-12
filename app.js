@@ -208,6 +208,9 @@ function setView(view) {
 
 function setStatus(status) {
   unitStatus.textContent = status;
+  document.querySelectorAll("[data-status]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.status === status);
+  });
   writeLog("STATUS", `2A-17 ${status.toUpperCase()}`);
 }
 
@@ -480,6 +483,9 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  const statusButton = event.target.closest("[data-status]");
+  if (statusButton) return setStatus(statusButton.dataset.status);
+
   const slideButton = event.target.closest("[data-slide-stage]");
   if (slideButton) return setSlideStage(slideButton.dataset.slideStage);
 
@@ -535,6 +541,6 @@ setLightMode("off");
 sirenState.textContent = "Muted";
 sirenKnob.textContent = "OFF";
 setAdvisorMode("off");
-writeLog("LOGIN", "METRO MDT TRAINING CONSOLE READY");
+writeLog("LOGIN", "LA METRO PATROL MDT READY");
 tickClock();
 setInterval(tickClock, 1000);
