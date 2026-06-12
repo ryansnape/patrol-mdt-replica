@@ -359,84 +359,96 @@ h2 {
   font-size: 0.72rem;
 }
 
-.map {
+.map-shell {
   position: relative;
   height: calc(100% - 28px);
   min-height: 260px;
   overflow: hidden;
   border: 1px solid #2d3d4c;
-  background:
-    linear-gradient(90deg, transparent 48%, rgba(255, 255, 255, 0.11) 48% 52%, transparent 52%) 0 0 / 150px 100%,
-    linear-gradient(0deg, transparent 48%, rgba(255, 255, 255, 0.1) 48% 52%, transparent 52%) 0 0 / 100% 110px,
-    #0b1117;
+  background: #0b1117;
 }
 
-.street {
+.map {
   position: absolute;
-  color: rgba(227, 235, 243, 0.7);
-  font-size: 0.7rem;
-  font-weight: 800;
+  inset: 0;
 }
 
-.street.a {
-  left: 12%;
-  top: 30%;
-  transform: rotate(-18deg);
+.leaflet-container {
+  background: #0b1117;
+  filter: saturate(0.85) brightness(0.72) contrast(1.08);
 }
 
-.street.b {
-  left: 42%;
-  bottom: 18%;
+.leaflet-control-attribution {
+  background: rgba(7, 11, 15, 0.78) !important;
+  color: #aeb9c4 !important;
+  font-size: 0.58rem;
 }
 
-.street.c {
-  right: 18%;
-  top: 28%;
-  transform: rotate(76deg);
+.leaflet-control-zoom a {
+  background: #10171f !important;
+  border-color: #2e3b47 !important;
+  color: var(--text) !important;
 }
 
-.unit-dot,
-.call-dot {
+.map-overlay {
   position: absolute;
-  display: grid;
-  place-items: center;
-  border: 2px solid white;
-  color: white;
-  font-size: 0.72rem;
+  top: 8px;
+  right: 8px;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(46, 59, 71, 0.92);
+  background: rgba(7, 11, 15, 0.86);
+  padding: 5px;
+}
+
+.map-overlay span {
+  color: var(--muted);
+  font-size: 0.66rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.map-overlay button {
+  min-height: 28px;
+  border: 1px solid var(--line);
+  background: #22486d;
+  color: var(--text);
+  font-size: 0.66rem;
   font-weight: 900;
 }
 
-.unit-dot {
-  left: 24%;
-  top: 56%;
-  min-width: 42px;
-  min-height: 30px;
+.leaflet-unit-marker,
+.leaflet-call-marker {
+  display: grid !important;
+  place-items: center;
+  border: 2px solid white;
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 900;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
+}
+
+.leaflet-unit-marker {
   background: #16456f;
 }
 
-.call-dot {
-  width: 32px;
-  height: 32px;
+.leaflet-call-marker {
   border-radius: 50%;
 }
 
-.call-dot.high {
-  left: 68%;
-  top: 31%;
+.leaflet-call-marker.priority-1 {
   background: #581b22;
   border-color: var(--red);
 }
 
-.call-dot.med {
-  left: 42%;
-  top: 73%;
+.leaflet-call-marker.priority-2 {
   background: #4c3512;
   border-color: var(--amber);
 }
 
-.call-dot.low {
-  left: 79%;
-  top: 62%;
+.leaflet-call-marker.priority-3 {
   background: #163c62;
   border-color: var(--blue);
 }

@@ -12,6 +12,7 @@ const calls = [
     units: "2A-17, 2A-22",
     narrative:
       "Caller reports a verbal argument in the parking lot. No weapons seen. Two subjects near a dark sedan. Simulation data only.",
+    offset: [0.006, -0.004],
   },
   {
     id: "C-2479",
@@ -25,6 +26,7 @@ const calls = [
     caller: "Road crew",
     units: "2B-05",
     narrative: "Lane obstruction from construction materials. Public works notified.",
+    offset: [-0.004, 0.006],
   },
   {
     id: "C-2476",
@@ -38,6 +40,7 @@ const calls = [
     caller: "Neighbor",
     units: "Unassigned",
     narrative: "Neighbor requests check after not seeing resident for several days.",
+    offset: [0.003, 0.008],
   },
   {
     id: "C-2472",
@@ -51,6 +54,7 @@ const calls = [
     caller: "Alarm company",
     units: "2A-11",
     narrative: "Commercial motion alarm, rear entry zone. Keyholder en route.",
+    offset: [-0.006, -0.005],
   },
 ];
 
@@ -98,6 +102,11 @@ let sirenOscillator = null;
 let sirenGain = null;
 let sirenTimer = null;
 let audioUnlocked = false;
+let mdtMap = null;
+let unitMarker = null;
+let routeLine = null;
+let callMarkers = [];
+let unitPosition = [34.0522, -118.2437];
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -106,6 +115,7 @@ const queueCount = $("#queueCount");
 const incidentDetail = $("#incidentDetail");
 const caseNumber = $("#caseNumber");
 const selectedLocation = $("#selectedLocation");
+const mapSource = $("#mapSource");
 const unitStatus = $("#unitStatus");
 const clock = $("#clock");
 const log = $("#log");
@@ -192,6 +202,7 @@ function selectCall(id) {
   selectedCallId = id;
   renderCalls();
   renderDetail(call);
+  focusCallOnMap(call);
   writeLog(`OPEN ${id}`, `${call.type} at ${call.address}`);
 }
 
@@ -212,6 +223,114 @@ function setStatus(status) {
     button.classList.toggle("active", button.dataset.status === status);
   });
   writeLog("STATUS", `2A-17 ${status.toUpperCase()}`);
+}
+
+function initMap() {
+  if (!window.L) {
+    selectedLocation.textContent = "Map library unavailable";
+    mapSource.textContent = "Map offline";
+    writeLog("MAP", "LEAFLET UNAVAILABLE");
+    return;
+  }
+
+  mdtMap = L.map("mdtMap", {
+    zoomControl: false,
+    attributionControl: false,
+  }).setView(unitPosition, 14);
+
+  L.control.zoom({ position: "bottomright" }).addTo(mdtMap);
+  L.control.attribution({ prefix: false, position: "bottomleft" }).addTo(mdtMap);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(mdtMap);
+
+  renderMapMarkers();
+  requestUnitLocation(false);
+}
+
+function requestUnitLocation(userRequested) {
+  if (!navigator.geolocation) {
+    setMapPosition(unitPosition, "LA fallback", "Browser location unavailable");
+    return;
+  }
+
+  if (userRequested) {
+    mapSource.textContent = "Requesting location...";
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const coords = [position.coords.latitude, position.coords.longitude];
+      setMapPosition(coords, "Browser location", "Unit GPS from browser");
+    },
+    () => {
+      setMapPosition(unitPosition, "LA fallback", "Location permission denied");
+    },
+    { enableHighAccuracy: true, timeout: 7000, maximumAge: 30000 },
+  );
+}
+
+function setMapPosition(coords, source, message) {
+  unitPosition = coords;
+  mapSource.textContent = source;
+  selectedLocation.textContent = message;
+  renderMapMarkers();
+  if (mdtMap) {
+    mdtMap.setView(unitPosition, source === "Browser location" ? 15 : 13);
+  }
+  writeLog("GPS", message.toUpperCase());
+}
+
+function callLatLng(call) {
+  return [unitPosition[0] + call.offset[0], unitPosition[1] + call.offset[1]];
+}
+
+function renderMapMarkers() {
+  if (!mdtMap || !window.L) return;
+
+  if (!unitMarker) {
+    unitMarker = L.marker(unitPosition, {
+      title: "2A-17",
+      icon: L.divIcon({
+        className: "leaflet-unit-marker",
+        html: "2A-17",
+        iconSize: [48, 28],
+        iconAnchor: [24, 14],
+      }),
+    }).addTo(mdtMap);
+  } else {
+    unitMarker.setLatLng(unitPosition);
+  }
+
+  callMarkers.forEach((marker) => marker.remove());
+  callMarkers = calls.map((call) => {
+    const marker = L.marker(callLatLng(call), {
+      title: call.id,
+      icon: L.divIcon({
+        className: `leaflet-call-marker priority-${call.priority}`,
+        html: priorityLabel(call.priority),
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+      }),
+    }).addTo(mdtMap);
+    marker.on("click", () => selectCall(call.id));
+    return marker;
+  });
+}
+
+function focusCallOnMap(call) {
+  if (!mdtMap || !window.L) return;
+  const destination = callLatLng(call);
+  const bounds = L.latLngBounds([unitPosition, destination]).pad(0.45);
+  mdtMap.fitBounds(bounds, { animate: true, maxZoom: 15 });
+  if (routeLine) routeLine.remove();
+  routeLine = L.polyline([unitPosition, destination], {
+    color: "#28c9bc",
+    weight: 3,
+    opacity: 0.85,
+    dashArray: "6 6",
+  }).addTo(mdtMap);
 }
 
 function setLightMode(mode) {
@@ -486,6 +605,9 @@ document.addEventListener("click", (event) => {
   const statusButton = event.target.closest("[data-status]");
   if (statusButton) return setStatus(statusButton.dataset.status);
 
+  const locateButton = event.target.closest("[data-locate]");
+  if (locateButton) return requestUnitLocation(true);
+
   const slideButton = event.target.closest("[data-slide-stage]");
   if (slideButton) return setSlideStage(slideButton.dataset.slideStage);
 
@@ -536,6 +658,7 @@ function tickClock() {
 renderCalls();
 renderDetail(null);
 runLookup();
+initMap();
 setView("cad");
 setLightMode("off");
 sirenState.textContent = "Muted";
