@@ -80,7 +80,7 @@ button {
 
 .equipment-rack {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) 90px;
+  grid-template-rows: minmax(0, 1fr) 250px;
   gap: 12px;
   padding: 18px clamp(12px, 3vw, 42px) 0;
   min-height: 0;
@@ -91,7 +91,7 @@ button {
 
 .mdt-frame {
   display: grid;
-  grid-template-rows: 64px minmax(0, 1fr) 88px;
+  grid-template-rows: 64px minmax(0, 1fr) 70px;
   gap: 8px;
   width: min(1180px, 100%);
   min-height: 0;
@@ -903,19 +903,19 @@ input[type="range"] {
 
 .console-hardware {
   display: grid;
-  grid-template-columns: 180px 260px minmax(260px, 520px);
-  align-items: end;
+  grid-template-columns: 150px minmax(620px, 820px) 220px 190px;
+  align-items: stretch;
   justify-content: center;
-  gap: 18px;
-  width: min(980px, 100%);
+  gap: 12px;
+  width: min(1220px, 100%);
   margin: 0 auto;
 }
 
 .radio-head,
-.hard-keys,
-.keyboard {
+.control-head,
+.lightbar-preview,
+.car-preview {
   border: 1px solid #2d363f;
-  border-bottom: 0;
   background: #0e1419;
   box-shadow: inset 0 0 0 2px #05070a;
 }
@@ -923,7 +923,7 @@ input[type="range"] {
 .radio-head {
   display: grid;
   gap: 4px;
-  min-height: 74px;
+  align-content: center;
   padding: 14px;
 }
 
@@ -939,34 +939,104 @@ input[type="range"] {
   font-size: 0.86rem;
 }
 
-.hard-keys {
+.control-head {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  min-height: 58px;
-  padding: 8px;
+  grid-template-rows: auto auto 1fr 1fr;
+  gap: 8px;
+  padding: 10px;
 }
 
-.hard-keys button {
-  border: 1px solid #3a444e;
-  background: #171f27;
-  color: #a8b7c5;
+.controller-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--muted);
   font-size: 0.68rem;
   font-weight: 900;
+  text-transform: uppercase;
 }
 
-.keyboard {
+.controller-title strong {
+  color: var(--text);
+}
+
+.controller-title.small {
+  margin-bottom: 5px;
+}
+
+.controller-row {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 5px;
-  min-height: 58px;
-  padding: 11px;
+  grid-template-columns: 86px 1fr 1.25fr;
+  gap: 8px;
+  min-height: 0;
 }
 
-.keyboard span {
-  border-radius: 3px;
-  background: #1b232b;
-  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.45);
+.controller-row.lower {
+  grid-template-columns: 1.1fr 0.9fr 0.7fr;
+}
+
+.control-head .slide-control button {
+  min-height: 36px;
+}
+
+.control-head .knob {
+  width: 78px;
+  height: 78px;
+  border-width: 6px;
+}
+
+.control-head .siren-buttons,
+.control-head .mini-buttons {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.control-head .aux-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.control-head .siren-buttons button,
+.control-head .mini-buttons button,
+.control-head .aux-grid button {
+  min-height: 28px;
+  font-size: 0.58rem;
+}
+
+.control-head .advisor-bar {
+  margin-bottom: 6px;
+}
+
+.controller-state {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 8px;
+  align-content: center;
+  border: 1px solid #26323d;
+  background: #0b1015;
+  padding: 8px;
+  font-size: 0.68rem;
+}
+
+.controller-state span {
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.controller-state strong {
+  color: var(--text);
+}
+
+.lightbar-preview {
+  display: grid;
+  align-content: center;
+  padding: 10px;
+}
+
+.lightbar-preview .lightbar {
+  min-height: 94px;
+}
+
+.car-preview {
+  min-height: 0;
 }
 
 @media (max-width: 980px) {
@@ -988,8 +1058,6 @@ input[type="range"] {
 
   .terminal-top,
   #cadScreen,
-  .code3-screen,
-  .control-zone,
   .console-hardware {
     grid-template-columns: 1fr;
   }

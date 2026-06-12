@@ -196,13 +196,14 @@ function selectCall(id) {
 }
 
 function setView(view) {
+  const normalized = view === "cad" || view === "map" || view === "lookup" ? view : "cad";
   document.querySelectorAll(".screen").forEach((screen) => {
-    screen.classList.toggle("active", screen.id === `${view}Screen`);
+    screen.classList.toggle("active", screen.id === "cadScreen");
   });
   document.querySelectorAll("[data-view]").forEach((button) => {
-    button.classList.toggle("active", button.dataset.view === view);
+    button.classList.toggle("active", button.dataset.view === normalized);
   });
-  writeLog("VIEW", view === "cad" ? "CAD DISPLAY SELECTED" : "CODE 3 CONTROL DISPLAY SELECTED");
+  writeLog("VIEW", `${normalized.toUpperCase()} DISPLAY SELECTED`);
 }
 
 function setStatus(status) {
@@ -448,7 +449,6 @@ document.addEventListener("click", (event) => {
   const panicButton = event.target.closest("[data-panic]");
   if (panicButton) {
     setStatus("Emergency");
-    setView("code3");
     setSlideStage(3);
     setSirenMode("yelp");
     writeLog("EMERG", "EMERGENCY BUTTON PRESSED IN SIMULATION");

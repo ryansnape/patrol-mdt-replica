@@ -31,7 +31,8 @@
             </div>
             <nav class="tabs" aria-label="view selector">
               <button data-view="cad" class="active">CAD</button>
-              <button data-view="code3">Code 3</button>
+              <button data-view="map">Map</button>
+              <button data-view="lookup">Lookup</button>
               <button data-panic>!</button>
             </nav>
           </header>
@@ -87,103 +88,6 @@
             </aside>
           </section>
 
-          <section class="screen code3-screen" id="code3Screen">
-            <section class="lightbar-zone">
-              <div class="section-title">
-                <h2>Lightbar</h2>
-                <span id="lightbarState">Off</span>
-              </div>
-              <div class="lightbar" id="lightbar">
-                <span class="lens red"></span>
-                <span class="lens red"></span>
-                <span class="lens white"></span>
-                <span class="center">2A-17</span>
-                <span class="lens white"></span>
-                <span class="lens blue"></span>
-                <span class="lens blue"></span>
-              </div>
-              <div class="car-preview" id="vehicleStage">
-                <div class="road-grid"></div>
-                <div class="car">
-                  <div class="glass"></div>
-                  <strong>METRO</strong>
-                  <span class="front red"></span>
-                  <span class="front blue"></span>
-                </div>
-              </div>
-            </section>
-
-            <section class="control-zone">
-              <div class="control-card wide">
-                <div class="section-title">
-                  <h2>Progressive Lighting</h2>
-                  <span id="patternName">Off</span>
-                </div>
-                <div class="slide-control">
-                  <button data-slide-stage="0" class="active"><span>0</span>Off</button>
-                  <button data-slide-stage="1"><span>1</span>Rear</button>
-                  <button data-slide-stage="2"><span>2</span>Resp</button>
-                  <button data-slide-stage="3"><span>3</span>Pursuit</button>
-                </div>
-              </div>
-
-              <div class="control-card">
-                <div class="section-title">
-                  <h2>Siren</h2>
-                  <span id="sirenState">Muted</span>
-                </div>
-                <div class="siren-face">
-                  <div class="knob"><span>Select</span><strong id="sirenKnob">OFF</strong></div>
-                  <div class="siren-buttons">
-                    <button data-siren="off" class="active">Off</button>
-                    <button data-siren="wail">Wail</button>
-                    <button data-siren="yelp">Yelp</button>
-                    <button data-siren="piercer">Piercer</button>
-                    <button data-siren="priority">Priority</button>
-                    <button data-siren="manual">Manual</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="control-card">
-                <div class="section-title">
-                  <h2>Traffic Advisor</h2>
-                  <span id="advisorState">Off</span>
-                </div>
-                <div class="advisor-bar" id="advisorBar">
-                  <span></span><span></span><span></span><span></span><span></span><span></span>
-                </div>
-                <div class="mini-buttons">
-                  <button data-advisor="off" class="active">Off</button>
-                  <button data-advisor="left">Left</button>
-                  <button data-advisor="right">Right</button>
-                  <button data-advisor="split">Split</button>
-                  <button data-advisor="warn">Warn</button>
-                  <button data-advisor="dim">Dim</button>
-                </div>
-              </div>
-
-              <div class="control-card wide">
-                <div class="section-title">
-                  <h2>Aux / Vehicle I/O</h2>
-                  <span>Sim bus</span>
-                </div>
-                <div class="aux-grid">
-                  <button data-light-mode="cruise">Cruise</button>
-                  <button data-light-mode="takedown">Takedown</button>
-                  <button data-light-mode="alley">Alley</button>
-                  <button data-momentary="airhorn">Air Horn</button>
-                  <button data-toggle="hornRing">Horn Ring <strong id="hornRingState">Normal</strong></button>
-                  <button data-toggle="radioRebroadcast">Radio <strong id="radioState">Normal</strong></button>
-                </div>
-                <label class="volume">
-                  Siren volume
-                  <input id="sirenVolume" type="range" min="0" max="0.35" step="0.01" value="0.16" />
-                </label>
-              </div>
-            </section>
-          </section>
-
           <footer class="terminal-log">
             <div id="log" class="log"></div>
             <form id="commandForm" class="command-form">
@@ -199,12 +103,83 @@
             <span>RADIO</span>
             <strong>CH 2 NORTH</strong>
           </div>
-          <div class="hard-keys">
-            <button>MAP</button><button>CAD</button><button>RMS</button><button>I/O</button>
+          <div class="control-head" aria-label="separate emergency lights and siren controller">
+            <div class="controller-title">
+              <span>Lights / Siren Controller</span>
+              <strong id="lightbarState">Off</strong>
+            </div>
+            <div class="slide-control">
+              <button data-slide-stage="0" class="active"><span>0</span>Off</button>
+              <button data-slide-stage="1"><span>1</span>Rear</button>
+              <button data-slide-stage="2"><span>2</span>Resp</button>
+              <button data-slide-stage="3"><span>3</span>Pursuit</button>
+            </div>
+            <div class="controller-row">
+              <div class="knob"><span>Siren</span><strong id="sirenKnob">OFF</strong></div>
+              <div class="siren-buttons">
+                <button data-siren="off" class="active">Off</button>
+                <button data-siren="wail">Wail</button>
+                <button data-siren="yelp">Yelp</button>
+                <button data-siren="piercer">Piercer</button>
+                <button data-siren="priority">Priority</button>
+                <button data-siren="manual">Manual</button>
+              </div>
+              <div class="aux-grid">
+                <button data-light-mode="cruise">Cruise</button>
+                <button data-light-mode="takedown">Takedown</button>
+                <button data-light-mode="alley">Alley</button>
+                <button data-momentary="airhorn">Air Horn</button>
+                <button data-toggle="hornRing">Horn Ring <strong id="hornRingState">Normal</strong></button>
+                <button data-toggle="radioRebroadcast">Radio <strong id="radioState">Normal</strong></button>
+              </div>
+            </div>
+            <div class="controller-row lower">
+              <div>
+                <div class="controller-title small">
+                  <span>Traffic Advisor</span>
+                  <strong id="advisorState">Off</strong>
+                </div>
+                <div class="advisor-bar" id="advisorBar">
+                  <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="mini-buttons">
+                  <button data-advisor="off" class="active">Off</button>
+                  <button data-advisor="left">Left</button>
+                  <button data-advisor="right">Right</button>
+                  <button data-advisor="split">Split</button>
+                  <button data-advisor="warn">Warn</button>
+                  <button data-advisor="dim">Dim</button>
+                </div>
+              </div>
+              <label class="volume">
+                Siren volume
+                <input id="sirenVolume" type="range" min="0" max="0.35" step="0.01" value="0.16" />
+              </label>
+              <div class="controller-state">
+                <span>Pattern</span><strong id="patternName">Off</strong>
+                <span>Siren</span><strong id="sirenState">Muted</strong>
+              </div>
+            </div>
           </div>
-          <div class="keyboard">
-            <span></span><span></span><span></span><span></span><span></span><span></span>
-            <span></span><span></span><span></span><span></span><span></span><span></span>
+          <div class="lightbar-preview">
+            <div class="lightbar" id="lightbar">
+              <span class="lens red"></span>
+              <span class="lens red"></span>
+              <span class="lens white"></span>
+              <span class="center">2A-17</span>
+              <span class="lens white"></span>
+              <span class="lens blue"></span>
+              <span class="lens blue"></span>
+            </div>
+          </div>
+          <div class="car-preview" id="vehicleStage">
+            <div class="road-grid"></div>
+            <div class="car">
+              <div class="glass"></div>
+              <strong>METRO</strong>
+              <span class="front red"></span>
+              <span class="front blue"></span>
+            </div>
           </div>
         </section>
       </section>
