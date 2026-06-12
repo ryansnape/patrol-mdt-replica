@@ -27,7 +27,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  overflow: hidden;
+  overflow-y: auto;
   background:
     radial-gradient(ellipse at 50% -10%, rgba(78, 91, 103, 0.6), transparent 38%),
     linear-gradient(#12171b 0 18%, #060708 18% 100%);
@@ -45,7 +45,7 @@ button {
 
 .patrol-cockpit {
   display: grid;
-  grid-template-rows: 96px minmax(0, 1fr);
+  grid-template-rows: 96px auto;
   min-height: 100vh;
 }
 
@@ -80,10 +80,11 @@ button {
 
 .equipment-rack {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) 250px;
+  grid-template-rows: minmax(520px, 58vh) minmax(250px, auto);
   gap: 12px;
   padding: 18px clamp(12px, 3vw, 42px) 0;
   min-height: 0;
+  padding-bottom: 28px;
   background:
     radial-gradient(ellipse at 50% 0, rgba(255, 255, 255, 0.05), transparent 60%),
     var(--bg);
@@ -94,7 +95,7 @@ button {
   grid-template-rows: 64px minmax(0, 1fr) 70px;
   gap: 8px;
   width: min(1180px, 100%);
-  min-height: 0;
+  min-height: 520px;
   margin: 0 auto;
   padding: 14px;
   border: 1px solid var(--case-edge);
@@ -909,6 +910,7 @@ input[type="range"] {
   gap: 12px;
   width: min(1220px, 100%);
   margin: 0 auto;
+  min-height: 250px;
 }
 
 .radio-head,
